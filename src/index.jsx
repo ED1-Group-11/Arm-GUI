@@ -4,7 +4,7 @@ import MainPage from './mainpage';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-    <MainPage />
-  </React.StrictMode>
+    <React.StrictMode>
+        <MainPage />
+    </React.StrictMode>
 );
