@@ -1,20 +1,24 @@
 import React from 'react';
 import Grid from '@mui/material/Grid';
 import axios from 'axios';
+import ReactPlayer from 'react-player'
 
 const ArmVideo = () => {
+
+    const stream = React.useRef(undefined);
+    const [playing, setPlaying] = React.useState(false);
+
     React.useEffect(() => {
         const peer = new RTCPeerConnection({
             iceServers: [{ urls: 'stun:stun.stunprotocol.org' }]
         });
 
         peer.ontrack = function(track) {
-            console.log('Track changed');
-            document.getElementById('stream').srcObject = track.streams[0];
+           stream.current = track.streams[0];
+           setPlaying(true);
         }
 
         peer.onnegotiationneeded = async function() {
-            console.log('Negotiated needed')
             const offer = await peer.createOffer();
             await peer.setLocalDescription(offer);
             const { data } = await axios.post('/api/stream-video', { sdp: peer.localDescription });
@@ -27,12 +31,10 @@ const ArmVideo = () => {
 
     return (
         <Grid container>
-            <Grid item xs={4} />
-            <Grid flex item xs={4} align="center">
+            <Grid item xs={3} />
+            <Grid item xs={5} align="center" data-testid='video-wrapper'>
                 <h1>Live View</h1>
-                <video id='stream' autoPlay>
-
-                </video>
+                <ReactPlayer url={stream.current} playing={playing} controls={playing} data-testid='video-stream' />
             </Grid>
         </Grid>
     );

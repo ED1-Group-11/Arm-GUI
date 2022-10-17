@@ -29,49 +29,124 @@ const MainPage = () => {
         });
     }, [mode]);
 
-
-    const [serverConfig, setServerConfig] = React.useState({});
-    
     const [color, setColor] = React.useState('red');
     const [shape, setShape] = React.useState('square');
 
-    async function callChangeSettingsAPI() {
+    React.useEffect(() => {
+        fetch('/api/current-settings')
+        .then(res => res.json())
+        .then(res => {
+            setColor(res.color);
+            setShape(res.shape);
+        })
+        .catch(e => {
+            console.log('Error getting current settings: ', e);
+        });
+    }, []);
+
+    function callChangeSettingsAPI() {
         fetch('/api/change-settings', {
-            method: 'POST', 
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
                 color,
                 shape
-            }), 
-            headers: {'Content-Type': 'application/json'},
+            }),
         })
         .then(res => res.json())
         .then(res => {
             console.log('setting server config', res);
-            setServerConfig(res);
         })
-        .catch(e => console.log('api error:', e));
+        .catch(e => console.log('Error changing settings:', e));
+    }
+
+    const [isManual, setIsManual] = React.useState(false);
+
+    // confirms the user wants to start manual contorl
+    // true == wants to start to start manual control
+    // false == does not want to start manual control
+    function handleStartManual() {
+        const res = window.confirm("You are about to enter manual mode. Are you sure?");
+        if (res) {
+            setIsManual(true);
+        }
+        return res;
     }
 
     function handleDownClick() {
+        if (!isManual && !handleStartManual()) {
+            return;
+        }
 
+        fetch('/api/arm-down', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: {
+                units: 1,
+            },
+        })
+        .then(res => res.json())
+        .then(res => {
+
+        })
+        .catch(e => console.log('Error: ', e));
     }
 
     function handleUpClick() {
+        if (!isManual && !handleStartManual()) {
+            return;
+        }
 
+        fetch('/api/arm-up', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: {
+                units: 1,
+            },
+        })
+        .then(res => res.json())
+        .then(res => {
+
+        })
+        .catch(e => console.log('Error: ', e));
     }
 
     function handleLeftClick() {
+        if (!isManual && !handleStartManual()) {
+            return;
+        }
 
+        fetch('/api/arm-left', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: {
+                units: 1,
+            },
+        })
+        .then(res => res.json())
+        .then(res => {
+
+        })
+        .catch(e => console.log('Error: ', e));
     }
 
     function handleRightClick() {
-
-    }
-
-    function changeArmSettings() {
-        if (serverConfig.color !== color || serverConfig.shape !== shape) {
-            callChangeSettingsAPI();
+        if (!isManual && !handleStartManual()) {
+            return;
         }
+
+        fetch('/api/arm-right', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: {
+                units: 1,
+            },
+        })
+        .then(res => res.json())
+        .then(res => {
+
+        })
+        .catch(e => console.log('Error: ', e));
     }
 
     function handleChangeTheme(e) {
@@ -92,7 +167,7 @@ const MainPage = () => {
                         <Typography variant='h6' component='div' sx={{flexGrow: 1}}>
                             ED1 Group 11
                         </Typography>
-                        <Switch checked={mode === 'light' ? false : true} onChange={handleChangeTheme} data-testid='theme-switch' />
+                        <Switch checked={mode !== 'light'} onChange={handleChangeTheme} data-testid='theme-switch' />
                     </Toolbar>
                 </AppBar>
             </Box>
@@ -114,7 +189,7 @@ const MainPage = () => {
                         <MenuItem value='octagon'>Octagon</MenuItem>
                         <MenuItem value='triangle'>Triangle</MenuItem>
                     </TextField>
-                    <Button onClick={changeArmSettings} sx={{ml: 2, height: '4em'}} variant='outlined'>
+                    <Button onClick={callChangeSettingsAPI} sx={{ml: 2, height: '4em'}} variant='outlined'>
                         Change Settings
                     </Button>
                 </Grid>
@@ -124,17 +199,17 @@ const MainPage = () => {
                 <Grid item xs={4}>
                     <Grid item>
                         <Button />
-                        <Button onClick={handleUpClick} variant='outlined' sx={{height: '4em', width: '3em'}}>
+                        <Button data-testid='arm-up' onClick={handleUpClick} variant='outlined' sx={{height: '4em', width: '3em'}}>
                             Up
                         </Button>
                     </Grid>
-                    <Button onClick={handleLeftClick} variant='outlined' sx={{height: '4em', width: '3em'}}>
+                    <Button data-testid='arm-left' onClick={handleLeftClick} variant='outlined' sx={{height: '4em', width: '3em'}}>
                         Left
                     </Button>
-                    <Button onClick={handleDownClick} variant='outlined' sx={{height: '4em', width: '3em'}}>
+                    <Button data-testid='arm-down' onClick={handleDownClick} variant='outlined' sx={{height: '4em', width: '3em'}}>
                         Down
                     </Button>
-                    <Button onClick={handleRightClick} variant='outlined' sx={{height: '4em', width: '3em'}}>
+                    <Button data-testid='arm-right' onClick={handleRightClick} variant='outlined' sx={{height: '4em', width: '3em'}}>
                         Right
                     </Button>
                 </Grid>

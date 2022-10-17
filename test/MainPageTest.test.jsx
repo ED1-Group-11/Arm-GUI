@@ -1,10 +1,23 @@
 import MainPage from '../src/MainPage';
 import { fireEvent, render } from '@testing-library/react';
+import MockRTCPeerConnection from './MockRTCPeerConnection';
 
 describe('MainPage', () => {
-    
+
     const MOCK_COLOR = 'blue';
     const MOCK_SHAPE = 'triangle';
+
+    beforeEach(() => {
+        global.RTCPeerConnection = MockRTCPeerConnection;
+        global.fetch = jest.fn(() => Promise.resolve({
+            json: () => {
+                return {
+                    color: 'red',
+                    shape: 'square'
+                };
+            }
+        }));
+    });
 
     function renderMainPage() {
         return render(<MainPage />);
