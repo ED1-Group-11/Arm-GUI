@@ -7,10 +7,11 @@ const ArmVideo = () => {
 
     const stream = React.useRef(undefined);
     const [playing, setPlaying] = React.useState(false);
+    const [lastError, setLastError] = React.useState(null);
 
     React.useEffect(() => {
         const peer = new RTCPeerConnection({
-            iceServers: [{ urls: 'stun:stun.stunprotocol.org' }]
+            iceServers: [{ urls: ['stun:stun.stunprotocol.org', 'turn:54.88.172.213'] }]
         });
 
         peer.ontrack = function(track) {
@@ -21,7 +22,20 @@ const ArmVideo = () => {
         peer.onnegotiationneeded = async function() {
             const offer = await peer.createOffer();
             await peer.setLocalDescription(offer);
-            const { data } = await axios.post('/api/stream-video', { sdp: peer.localDescription });
+            let data;
+            try {
+                data = await axios.post('/api/stream-video', { sdp: peer.localDescription });
+            }
+            catch(e) {
+                console.log('Error geting sdp from server: ', e);
+                const currentTime = new Date();
+                const secondsSinceLastError = lastError ? Math.abs(currentTime - lastError) / 1000 : 9999;
+                if (lastError == null || secondsSinceLastError > 5) {
+                    alert('Unable to connect to server or video is not streaming');
+                    setLastError(currentTime);
+                }
+                return;
+            }
             const description = new RTCSessionDescription(data.sdp);
             peer.setRemoteDescription(description).catch(e => console.log(e));
         };
