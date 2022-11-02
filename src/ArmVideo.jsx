@@ -19,6 +19,10 @@ const ArmVideo = () => {
             }]
         });
 
+        peer.on('error', (e) => {
+            console.log('error: ', e);
+        });
+
         peer.ontrack = function(track) {
            stream.current = track.streams[0];
            setPlaying(true);
