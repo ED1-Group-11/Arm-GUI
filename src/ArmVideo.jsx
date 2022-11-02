@@ -11,7 +11,12 @@ const ArmVideo = () => {
 
     React.useEffect(() => {
         const peer = new RTCPeerConnection({
-            iceServers: [{ urls: ['stun:stun.stunprotocol.org', 'turn:54.88.172.213'] }]
+            iceServers: [{
+                urls: ['stun:stun.stunprotocol.org', 'turn:54.88.172.213'],
+                // server is not password protected but must prodide credintials due to spec
+                username: 'username',
+                credential: 'password',
+            }]
         });
 
         peer.ontrack = function(track) {
