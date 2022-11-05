@@ -11,7 +11,7 @@ const ArmVideo = () => {
 
     React.useEffect(() => {
         const peer = new RTCPeerConnection({
-            iceServers: [{ urls: ["stun:stun1.l.google.com:19302", "stun:stun2.l.google.com:19305" ] }]
+            iceServers: [{ urls: ["stun:54.88.172.213"] }]
         });
 
         peer.ontrack = function(track) {
