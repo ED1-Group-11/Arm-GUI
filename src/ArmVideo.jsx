@@ -11,12 +11,7 @@ const ArmVideo = () => {
 
     React.useEffect(() => {
         const peer = new RTCPeerConnection({
-            iceServers: [{
-                urls: 'stun:stun.l.google.com',
-                // server is not password protected but must prodide credintials due to spec
-                username: 'username',
-                credential: 'password',
-            }]
+            iceServers: [{ urls: ["stun:stun1.l.google.com:19302", "stun:stun2.l.google.com:19305" ] }]
         });
 
         peer.ontrack = function(track) {
@@ -28,6 +23,7 @@ const ArmVideo = () => {
             const offer = await peer.createOffer();
             await peer.setLocalDescription(offer);
             let data;
+
             try {
                 data = await axios.post('/api/stream-video', { sdp: peer.localDescription });
             }
@@ -41,7 +37,9 @@ const ArmVideo = () => {
                 }
                 return;
             }
-            const description = new RTCSessionDescription(data.sdp);
+
+            const description = new RTCSessionDescription(data.data.sdp);
+
             peer.setRemoteDescription(description).catch(e => console.log(e));
         };
 
