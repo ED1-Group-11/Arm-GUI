@@ -12,7 +12,7 @@ const ArmVideo = () => {
     React.useEffect(() => {
         const peer = new RTCPeerConnection({
             iceServers: [{
-                urls: 'turn:54.88.172.213',
+                urls: 'stun:stun.l.google.com',
                 // server is not password protected but must prodide credintials due to spec
                 username: 'username',
                 credential: 'password',
