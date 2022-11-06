@@ -11,7 +11,7 @@ const ArmVideo = () => {
 
     React.useEffect(() => {
         const peer = new RTCPeerConnection({
-            iceServers: [{ urls: ["turn:54.89.171.143?transport=tcp"] }]
+            iceServers: [{ urls: ["turn:54.89.171.143?transport=tcp"], username: 'user', credential: 'user',}]
         });
 
         peer.ontrack = function(track) {
