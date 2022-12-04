@@ -135,6 +135,8 @@ const MainPage = () => {
             return;
         }
 
+        console.log("Moving right")
+
         fetch('/api/arm-right', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -144,7 +146,7 @@ const MainPage = () => {
         })
         .then(res => res.json())
         .then(res => {
-
+            console.log("Right movement: ", res)
         })
         .catch(e => console.log('Error: ', e));
     }
