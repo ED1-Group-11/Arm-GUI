@@ -81,13 +81,11 @@ const MainPage = () => {
         fetch('/api/arm-down', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: {
-                units: 1,
-            },
+            body: JSON.stringify({ units: 1 }),
         })
         .then(res => res.json())
         .then(res => {
-
+            console.log("Moved down: ", res)
         })
         .catch(e => console.log('Error: ', e));
     }
@@ -100,13 +98,11 @@ const MainPage = () => {
         fetch('/api/arm-up', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: {
-                units: 1,
-            },
+            body: JSON.stringify({ units: 1 }),
         })
         .then(res => res.json())
         .then(res => {
-
+            consle.log("Moved up: ", res)
         })
         .catch(e => console.log('Error: ', e));
     }
@@ -119,9 +115,7 @@ const MainPage = () => {
         fetch('/api/arm-left', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: {
-                units: 1,
-            },
+            body: JSON.stringify({ units: 1 }),
         })
         .then(res => res.json())
         .then(res => {
