@@ -140,9 +140,7 @@ const MainPage = () => {
         fetch('/api/arm-right', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: {
-                units: 1,
-            },
+            body: JSON.stringify({ units: 1 }),
         })
         .then(res => res.json())
         .then(res => {
