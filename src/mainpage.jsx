@@ -102,7 +102,7 @@ const MainPage = () => {
         })
         .then(res => res.json())
         .then(res => {
-            consle.log("Moved up: ", res)
+            console.log("Moved up: ", res)
         })
         .catch(e => console.log('Error: ', e));
     }
